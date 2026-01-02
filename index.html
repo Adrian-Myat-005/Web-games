@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" lang="my" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZENITH | Wide Mobile</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <div class="brand">အပျင်းပြေ<span class="dot"> | </span>Games</div>
+        </div>
+        
+        <div class="nav-right">
+            <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme">
+                <span class="icon">☀</span>
+            </button>
+            <div class="user-stats">
+                <span class="label">အကောင်းဆုံးရမှတ်</span>
+                <span class="value" id="global-high-score">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="library-header">
+            <h1>ဂိမ်းများ</h1>
+            <p id="library-count">Loading...</p>
+        </header>
+
+        <div class="game-grid" id="grid">
+            </div>
+    </main>
+
+    <div id="app-modal">
+        <div class="modal-bar">
+            <button class="close-btn" id="modal-close-btn">
+                <span class="icon">✕</span> ထွက်ရန်
+            </button>
+            <div class="app-title" id="active-game-title">Running</div>
+        </div>
+        
+        <div class="viewport">
+            <iframe id="game-iframe" src=""></iframe>
+
+            <div id="internal-wrapper">
+                <canvas id="game-canvas" width="1400" height="700"></canvas>
+                
+                <div id="ui-layer">
+                    
+                    <div class="hud">
+                        <div class="hud-group">
+                            <span class="hud-label">LIVES</span>
+                            <span class="hud-value" id="hud-lives">❤️❤️❤️</span>
+                        </div>
+                        <div class="hud-group mobile-hide">
+                            <span class="hud-label">COMBO</span>
+                            <span class="hud-value highlight" id="hud-combo">x0</span>
+                        </div>
+                        <div class="hud-group">
+                            <span class="hud-label">SCORE</span>
+                            <span class="hud-value" id="hud-score">0</span>
+                        </div>
+                    </div>
+
+                    <div id="screen-start" class="overlay active">
+                        <h1 class="hero-text">NEON SWARM</h1>
+                        <p class="sub-text">TOUCH & DRAG TO START</p>
+                        <button class="primary-btn" id="btn-start">ကစားမယ်</button>
+                    </div>
+
+                    <div id="screen-pause" class="overlay">
+                        <h1 class="hero-text">PAUSED</h1>
+                        <button class="secondary-btn" id="btn-resume">RESUME</button>
+                    </div>
+
+                    <div id="screen-gameover" class="overlay">
+                        <h1 class="hero-text">GAME OVER</h1>
+                        <div class="score-display">Final Score: <span id="final-score">0</span></div>
+                        <button class="primary-btn" id="btn-restart">RETRY</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="noirscape.js"></script>
+    <script src="pacman.js"></script>
+    <script src="moto.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

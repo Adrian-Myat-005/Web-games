@@ -1,0 +1,245 @@
+/* =========================================
+   1. THEME VARIABLES & CONFIGURATION
+   ========================================= */
+
+/* Default Theme (Light) - Applied if no preference */
+:root {
+    --bg: #F0F2F5;
+    --surface: #FFFFFF;
+    --surface-2: #F7F9FC;
+    --text-main: #1A1A1A;
+    --text-muted: #64748B;
+    --accent: #3B82F6;     
+    --accent-glow: rgba(59, 130, 246, 0.3);
+    --border: rgba(0,0,0,0.08);
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    --canvas-bg: #FFFFFF;
+    
+    --font: 'Outfit', sans-serif;
+}
+
+/* Automatic Dark Mode (System Preference) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0F172A;
+        --surface: #1E293B;
+        --surface-2: #334155;
+        --text-main: #F8FAFC;
+        --text-muted: #94A3B8;
+        --accent: #F43F5E;    
+        --accent-glow: rgba(244, 63, 94, 0.4);
+        --border: rgba(255,255,255,0.1);
+        --shadow: 0 4px 20px rgba(0,0,0,0.4);
+        --canvas-bg: #0F172A;
+    }
+}
+
+/* Manual Override: Force Dark */
+[data-theme="dark"] {
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --surface-2: #334155;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --accent: #F43F5E;    
+    --accent-glow: rgba(244, 63, 94, 0.4);
+    --border: rgba(255,255,255,0.1);
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+    --canvas-bg: #0F172A;
+}
+
+/* Manual Override: Force Light */
+[data-theme="light"] {
+    --bg: #F0F2F5;
+    --surface: #FFFFFF;
+    --surface-2: #F7F9FC;
+    --text-main: #1A1A1A;
+    --text-muted: #64748B;
+    --accent: #3B82F6;     
+    --accent-glow: rgba(59, 130, 246, 0.3);
+    --border: rgba(0,0,0,0.08);
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    --canvas-bg: #FFFFFF;
+}
+
+/* =========================================
+   2. GLOBAL RESET & BASICS
+   ========================================= */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: var(--font); 
+    user-select: none; 
+    /* Removed global transition for better performance */
+}
+
+body { 
+    background: var(--bg); 
+    color: var(--text-main); 
+    height: 100vh; 
+    overflow: hidden; 
+    /* Smooth theme transition */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* =========================================
+   3. NAVBAR
+   ========================================= */
+nav {
+    height: 60px; 
+    padding: 0 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    background: var(--surface); 
+    border-bottom: 1px solid var(--border);
+    position: fixed; top: 0; width: 100%; z-index: 50;
+    box-shadow: var(--shadow);
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.brand { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.dot { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 15px; }
+
+.icon-btn {
+    background: var(--surface-2); border: none; width: 36px; height: 36px;
+    border-radius: 50%; cursor: pointer; color: var(--text-main); font-size: 16px;
+    display: flex; align-items: center; justify-content: center; 
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.icon-btn:hover { background: var(--accent); color: white; transform: rotate(15deg); }
+
+.user-stats { text-align: right; }
+.user-stats .label { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; }
+.user-stats .value { font-size: 16px; font-weight: 700; color: var(--accent); }
+
+/* =========================================
+   4. MAIN LAYOUT & GAME GRID
+   ========================================= */
+.container { padding: 90px 20px 40px; max-width: 1400px; margin: 0 auto; height: 100vh; overflow-y: auto; }
+
+.library-header { margin-bottom: 25px; display: flex; align-items: baseline; gap: 10px; }
+.library-header h1 { font-size: 28px; font-weight: 700; }
+#library-count { color: var(--text-muted); font-weight: 600; }
+
+.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding-bottom: 50px; }
+
+.game-card {
+    background: var(--surface); 
+    border-radius: 16px;
+    box-shadow: var(--shadow); 
+    cursor: pointer;
+    overflow: hidden; 
+    border: 1px solid var(--border);
+    transition: transform 0.2s, background 0.3s ease, border-color 0.3s ease;
+}
+.game-card:active { transform: scale(0.96); border-color: var(--accent); }
+
+.card-thumb { 
+    height: 110px; background: var(--surface-2); 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 45px; 
+    transition: background 0.3s ease;
+}
+.card-info { padding: 15px; }
+.card-title { font-weight: 700; font-size: 15px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-tag { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+
+/* =========================================
+   5. MODAL & PLAYER
+   ========================================= */
+#app-modal {
+    display: none; 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+    z-index: 100; flex-direction: column; opacity: 0; transition: opacity 0.3s;
+}
+#app-modal.open { display: flex; opacity: 1; }
+
+.modal-bar { height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(0,0,0,0.2); }
+.app-title { color: white; font-weight: 700; font-size: 16px; opacity: 0.8; }
+
+.close-btn {
+    background: rgba(255,255,255,0.15); border: none; color: white;
+    padding: 6px 16px; border-radius: 30px; cursor: pointer;
+    font-weight: 700; font-size: 12px; transition: 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.close-btn:hover { background: var(--accent); }
+
+.viewport { 
+    flex-grow: 1; display: flex; align-items: center; justify-content: center; 
+    padding: 10px; width: 100%; height: 100%; overflow: hidden;
+}
+
+/* External Games */
+iframe { 
+    width: 100%; height: 100%; border-radius: 12px; border: none; 
+    background: white; box-shadow: var(--shadow); 
+}
+
+/* Internal Games */
+#internal-wrapper {
+    position: relative; width: 100%; max-width: 1400px; aspect-ratio: 2/1;
+    background: var(--canvas-bg);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.3s ease;
+}
+
+canvas { width: 100% !important; height: 100% !important; display: block; touch-action: none; }
+
+/* =========================================
+   6. HUD & UI OVERLAYS
+   ========================================= */
+#ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.hud {
+    position: absolute; top: 15px; left: 15px; right: 15px;
+    display: flex; justify-content: space-between;
+}
+.hud-group { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+.hud-label { font-size: 10px; font-weight: 700; color: #94A3B8; margin-right: 8px; }
+.hud-value { font-weight: 700; color: white; font-size: 16px; }
+.hud-value.highlight { color: #F43F5E; }
+
+.overlay {
+    position: absolute; inset: 0;
+    background: rgba(15, 23, 42, 0.9);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: 0.3s;
+}
+.overlay.active { opacity: 1; pointer-events: auto; }
+
+.hero-text { font-size: 40px; font-weight: 700; color: white; letter-spacing: -1px; text-shadow: 0 0 20px var(--accent-glow); margin-bottom: 8px; text-align: center; }
+.sub-text { color: #94A3B8; margin-bottom: 30px; font-size: 14px; letter-spacing: 2px; text-align: center; }
+
+.primary-btn, .secondary-btn {
+    padding: 16px 40px; border-radius: 40px; border: none;
+    font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s;
+    letter-spacing: 1px;
+}
+.primary-btn { background: var(--accent); color: white; box-shadow: 0 0 20px var(--accent-glow); }
+.primary-btn:active { transform: scale(0.95); }
+.secondary-btn { background: transparent; border: 2px solid rgba(255,255,255,0.2); color: white; }
+
+/* =========================================
+   7. UTILITIES & ANIMATIONS
+   ========================================= */
+@media (max-width: 600px) {
+    .mobile-hide { display: none; } 
+    .hero-text { font-size: 32px; }
+    .viewport { padding: 0; } 
+    #internal-wrapper { border-radius: 0; border: none; aspect-ratio: auto; height: 100%; } 
+    iframe { border-radius: 0; }
+}
+
+.shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
