@@ -564,19 +564,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         canvas.addEventListener("touchstart", (e) => { 
             e.preventDefault(); 
-            touchStartX = e.touches[0].clientX; 
-            touchStartY = e.touches[0].clientY; 
-            handleMove(e.touches[0].clientX); 
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            
+            // 1. Update coordinates
+            touchStartX = touch.clientX; 
+            touchStartY = touch.clientY; 
+            
+            // 2. Define inputX for your Left/Right logic
+            const inputX = (touch.clientX - rect.left) * (canvas.width / rect.width);
+            handleMove(touch.clientX); 
+
             if(activeGameMode === 'moto') {
+                // 3. Always set space to true to clear the "READY" menu
+                keys.space = true; 
+
+                // 4. Split Screen Controls
                 if (inputX > canvas.width / 2) {
-                    keys.up = true; // Gas
-                    keys.right = true;
-                    keys.space = true;
+                    keys.up = true;    // Gas
+                    keys.right = true; // Lean forward
                 } else {
-                    keys.down = true; // Brake
-                    keys.left = true; // Lean back
+                    keys.down = true;  // Brake
+                    keys.left = true;  // Lean back
                 }
             }
+
+            if(activeGameMode === 'brick') launchPressed = true;
+            if(activeGameMode === 'pacman') keys.space = true;
+
         }, { passive: false });
 
         canvas.addEventListener("touchmove", (e) => { 
@@ -608,10 +623,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         if(activeGameMode === 'noir') NoirGame.action('DOWN');
                         if(activeGameMode === 'pacman') keys.down = true;
                         if (activeGameMode === 'moto') {
-                            keys.up = false; 
+                            keys.up = false;
                             keys.down = false;
-                            keys.left = false;
                             keys.right = false;
+                            keys.left = false;
+                            keys.space = false;
                         }
                     } else { 
                         if(activeGameMode === 'noir') NoirGame.action('UP');
