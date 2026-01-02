@@ -598,18 +598,33 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
             handleMove(e.touches[0].clientX); 
         }, { passive: false });
-
+        
         canvas.addEventListener("touchend", (e) => {
             e.preventDefault();
-            if(activeGameMode === 'brick' && ballAttached) launchPressed = true; 
 
-            // Swipe Logic
-            let endX = e.changedTouches[0].clientX; let endY = e.changedTouches[0].clientY;
-            let diffX = endX - touchStartX; let diffY = endY - touchStartY;
+            // 1. MOTO RESET (IMMEDIATE)
+            // This stops the "auto-moving" bug. 
+            // The bike stops accelerating/braking the instant the finger leaves the screen.
+            if (activeGameMode === 'moto') {
+                keys.up = false;
+                keys.down = false;
+                keys.right = false;
+                keys.left = false;
+                keys.space = false;
+                return; // Exit here: Moto doesn't need to calculate swipes
+            }
 
-            if(Math.abs(diffX) > Math.abs(diffY)) {
-                if(Math.abs(diffX) > 30) {
-                    if(diffX > 0) { 
+            // 2. SWIPE CALCULATIONS (For Pacman/Noirscape)
+            let endX = e.changedTouches[0].clientX; 
+            let endY = e.changedTouches[0].clientY;
+            let diffX = endX - touchStartX; 
+            let diffY = endY - touchStartY;
+
+            // Determine if the swipe was Horizontal or Vertical
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                // Horizontal Swipes (Left/Right)
+                if (Math.abs(diffX) > 30) {
+                    if (diffX > 0) { 
                         if(activeGameMode === 'noir') NoirGame.action('RIGHT');
                         if(activeGameMode === 'pacman') keys.right = true; 
                     } else { 
@@ -618,28 +633,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else {
-                if(Math.abs(diffY) > 30) {
-                    if(diffY > 0) { 
+                // Vertical Swipes (Up/Down)
+                if (Math.abs(diffY) > 30) {
+                    if (diffY > 0) { 
                         if(activeGameMode === 'noir') NoirGame.action('DOWN');
                         if(activeGameMode === 'pacman') keys.down = true;
-                        if (activeGameMode === 'moto') {
-                            keys.up = false;
-                            keys.down = false;
-                            keys.right = false;
-                            keys.left = false;
-                            keys.space = false;
-                        }
                     } else { 
                         if(activeGameMode === 'noir') NoirGame.action('UP');
                         if(activeGameMode === 'pacman') keys.up = true;
                     }
                 } else if(activeGameMode === 'noir') {
+                    // Quick Tap
                     NoirGame.action('SHOOT'); 
                 }
             }
-            // Reset Pacman keys after short delay to prevent infinite running in one dir if using swipes
-            if(activeGameMode === 'pacman') setTimeout(()=>{ keys.up=false; keys.down=false; keys.left=false; keys.right=false; }, 100);
+
+            // 3. PACMAN CLEANUP
+            // Resets directional keys after 100ms so Pacman doesn't run forever
+            if (activeGameMode === 'pacman') {
+                setTimeout(() => { 
+                    keys.up = false; 
+                    keys.down = false; 
+                    keys.left = false; 
+                    keys.right = false; 
+                }, 100);
+            }
         });
-    }
-    init();
-});
+    } // End of Canvas check
+    init(); // Start Library
+}); // End of DOMContentLoaded
