@@ -570,7 +570,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if(activeGameMode === 'moto') {
                 if (inputX > canvas.width / 2) {
                     keys.up = true; // Gas
-                    keys.right = true; // Lean forward
+                    keys.right = true;
+                    keys.space = true;
                 } else {
                     keys.down = true; // Brake
                     keys.left = true; // Lean back
